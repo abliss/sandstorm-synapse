@@ -11,7 +11,7 @@ apt-get update
 apt-get install -y build-essential python3-dev libffi-dev \
   python3-pip python3-setuptools sqlite3 \
   libssl-dev python3-virtualenv libjpeg-dev libxslt1-dev \
-  python3-virtualenv
+  libpq-dev python3-virtualenv
 
 #
 # If the packages you're installing here need some configuration adjustments,
