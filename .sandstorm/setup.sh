@@ -13,7 +13,6 @@ apt-get install -y build-essential python3-dev libffi-dev \
   libssl-dev python3-virtualenv libjpeg-dev libxslt1-dev \
   python3-virtualenv
 
-pip3 install virtualenv
 #
 # If the packages you're installing here need some configuration adjustments,
 # this is also a good place to do that:

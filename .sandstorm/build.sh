@@ -7,9 +7,7 @@ set -xeuo pipefail
 
 cd /opt/app
 
-export PATH=$HOME/.local/bin:$PATH
-# Python doesn't work!
-virtualenv -p python3 env
+python3 -m virtualenv -p python3 env
 # python devs don't understand bash
 export PS1=''
 
