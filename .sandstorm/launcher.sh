@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -xeuo pipefail
 # This script is run every time an instance of our app - aka grain - starts up.
 # This is the entry point for your application both when a grain is first launched
 # and when a grain resumes after being previously shut down.
@@ -29,4 +29,19 @@ set -euo pipefail
 # By default, this script does nothing.  You'll have to modify it as
 # appropriate for your application.
 cd /opt/app
-exit 0
+# python devs don't know bash
+export PS1=''
+source env/bin/activate
+
+# Without a HOME, I get:
+#   File "/usr/lib/python3.5/sysconfig.py", line 546, in get_config_vars
+#     _CONFIG_VARS['userbase'] = _getuserbase()
+#   File "/usr/lib/python3.5/sysconfig.py", line 205, in _getuserbase
+#     return joinuser("~", ".local")
+#   File "/usr/lib/python3.5/sysconfig.py", line 184, in joinuser
+#     return os.path.expanduser(os.path.join(*args))
+#   File "/usr/lib/python3.5/posixpath.py", line 238, in expanduser
+#     userhome = pwd.getpwuid(os.getuid()).pw_dir
+# KeyError: 'getpwuid(): uid not found: 1653'
+export HOME=/var
+synctl start --no-daemonize

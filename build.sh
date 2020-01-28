@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euxo pipefail
-virtualenv -p python3 env
 source env/bin/activate
-python -m pip install --no-use-pep517 -e .[all]
+python -m synapse.app.homeserver \
+    --server-name FIXME.rapidraven.sandcats.io \
+    --config-path homeserver.yaml \
+    --generate-config \
+    --report-stats=no
 
