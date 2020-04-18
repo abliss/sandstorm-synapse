@@ -15,19 +15,5 @@ apt-get install -y build-essential python3-dev libffi-dev \
 
 virtualenv -p python3 env
 source env/bin/activate
-python -m pip install --no-use-pep517 -e .[all]
+python3 -m pip install --no-use-pep517 -e .[all]
 
-#
-# If the packages you're installing here need some configuration adjustments,
-# this is also a good place to do that:
-#
-#    sed --in-place='' \
-#            --expression 's/^user www-data/#user www-data/' \
-#            --expression 's#^pid /run/nginx.pid#pid /var/run/nginx.pid#' \
-#            --expression 's/^\s*error_log.*/error_log stderr;/' \
-#            --expression 's/^\s*access_log.*/access_log off;/' \
-#            /etc/nginx/nginx.conf
-
-# By default, this script does nothing.  You'll have to modify it as
-# appropriate for your application.
-exit 0

@@ -28,10 +28,18 @@ set -xeuo pipefail
 
 # By default, this script does nothing.  You'll have to modify it as
 # appropriate for your application.
-cd /opt/app
+
 # python devs don't know bash
 export PS1=''
 source env/bin/activate
+
+ls -la env/bin
+ls -la /home/abliss/
+ls -la /home/abliss/proj
+ls -la /home/abliss/proj/sandstorm
+ls -la /home/abliss/proj/sandstorm/matrix
+ls -la /home/abliss/proj/sandstorm/matrix/env
+ls -la /home/abliss/proj/sandstorm/matrix/env/bin
 
 # Without a HOME, I get:
 #   File "/usr/lib/python3.5/sysconfig.py", line 546, in get_config_vars

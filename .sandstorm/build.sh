@@ -5,7 +5,6 @@ set -xeuo pipefail
 # process - transforming the code in your repository into the collection of files
 # which can actually run the service in production
 
-cd /opt/app
 
 python3 -m virtualenv -p python3 env
 # python devs don't understand bash

@@ -225,7 +225,7 @@ const pkgdef :Spk.PackageDefinition = (
         ),
       ],
     ),
-    apiPath = "/api",
+    # apiPath = "/api",
     # Apps can export an API to the world.  The API is to be used primarily by Javascript
     # code and native apps, so it can't serve out regular HTML to browsers.  If a request
     # comes in to your app's API, sandstorm-http-bridge will prefix the request's path with
@@ -235,7 +235,7 @@ const pkgdef :Spk.PackageDefinition = (
 
 const myCommand :Spk.Manifest.Command = (
   # Here we define the command used to start up your server.
-  argv = ["/sandstorm-http-bridge", "8008", "--", "/bin/bash", "/opt/app/.sandstorm/launcher.sh"],
+  argv = ["/sandstorm-http-bridge", "8008", "--", "/bin/bash", ".sandstorm/launcher.sh"],
   environ = [
     # Note that this defines the *entire* environment seen by your app.
     (key = "PATH", value = "/usr/local/bin:/usr/bin:/bin"),
