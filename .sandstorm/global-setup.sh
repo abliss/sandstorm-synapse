@@ -38,15 +38,15 @@ usermod -a -G 'sandstorm' 'vagrant'
 sudo sed --in-place='' \
         --expression='s/^BIND_IP=.*/BIND_IP=0.0.0.0/' \
         /opt/sandstorm/sandstorm.conf
-# matrix seems to require https. sigh.
-sudo sed --in-place='' \
-        --expression='s/^BASE_URL=http:/BASE_URL=https:/' \
-        /opt/sandstorm/sandstorm.conf
-sudo sed --in-place='' \
-        --expression='s/^PORT=6080/PORT=6079/' \
-        /opt/sandstorm/sandstorm.conf
-echo 'HTTPS_PORT=6080'  |sudo tee -a /opt/sandstorm/sandstorm.conf
-sudo mkdir -p /opt/sandstorm/var/sandcats/https/local.sandcats.io
+# matrix seems to require https. sigh. This doesn't work.
+# sudo sed --in-place='' \
+#         --expression='s/^BASE_URL=http:/BASE_URL=https:/' \
+#         /opt/sandstorm/sandstorm.conf
+# sudo sed --in-place='' \
+#         --expression='s/^PORT=6080/PORT=6079/' \
+#         /opt/sandstorm/sandstorm.conf
+# echo 'HTTPS_PORT=6080'  |sudo tee -a /opt/sandstorm/sandstorm.conf
+# sudo mkdir -p /opt/sandstorm/var/sandcats/https/local.sandcats.io
 
 sudo service sandstorm restart
 # Enable apt-cacher-ng proxy to make things faster if one appears to be running on the gateway IP

@@ -18,13 +18,15 @@
 .git/HEAD
 .git/config
 .git/index
-.git/objects/03
 .git/objects/03/19adcda6ed9475104d3c51f91e2a9d4f2a7075
 .git/objects/07/fe0ef149d81cef312771ca3875b78465e83415
-.git/objects/9b/afba94025412cd0bce590803e201ffc1dd0ea8
-.git/objects/a4/d65809fe3dd03a3f1c00c670795d6bb8adf919
+.git/objects/0a
+.git/objects/0a/b330f822f1692d43eb70ad9489eaac05c04823
+.git/objects/92/2f551ed4cc2e61306312a047109ad8a1ac38af
 .git/objects/a9/082cc80ad4c4a5bdc7d4e269994978fd4de843
+.git/objects/bd/ad63487dac6b25b095cb40e07ce1e8f5f40ca3
 .git/objects/e4/0a9d2fd3ae0acc5b95da3ec84ae8ee6b7812dd
+.git/objects/ec/c986e68aa1a36e99f95be477f6e12c91b9cc1a
 .git/objects/pack
 .git/objects/pack/pack-d6a2babe10529039b3bc271355ee9da3eefe4570.idx
 .git/objects/pack/pack-d6a2babe10529039b3bc271355ee9da3eefe4570.pack
@@ -1671,7 +1673,12 @@
 .sandstorm/.gitattributes
 .sandstorm/.gitignore
 .sandstorm/Vagrantfile
+.sandstorm/build.sh
+.sandstorm/global-setup.sh
 .sandstorm/launcher.sh
+.sandstorm/sandstorm-files.list
+.sandstorm/sandstorm-pkgdef.capnp
+.sandstorm/setup.sh
 .sandstorm/stack
 AUTHORS.rst
 CHANGES.md
@@ -1893,6 +1900,7 @@ env/bin/activate
 env/bin/python
 env/bin/python3
 env/bin/python3.6
+env/bin/register_new_matrix_user
 env/bin/synctl
 env/lib/python3.6
 env/lib/python3.6/__future__.py
@@ -2645,6 +2653,9 @@ env/lib/python3.6/site-packages/requests/__pycache__/sessions.cpython-36.pyc
 env/lib/python3.6/site-packages/requests/__pycache__/status_codes.cpython-36.pyc
 env/lib/python3.6/site-packages/requests/__pycache__/structures.cpython-36.pyc
 env/lib/python3.6/site-packages/requests/__pycache__/utils.cpython-36.pyc
+env/lib/python3.6/site-packages/requests/adapters.py
+env/lib/python3.6/site-packages/requests/api.py
+env/lib/python3.6/site-packages/requests/sessions.py
 env/lib/python3.6/site-packages/requests_toolbelt-0.9.1.dist-info
 env/lib/python3.6/site-packages/sentry_sdk-0.14.1.dist-info
 env/lib/python3.6/site-packages/service_identity
@@ -2814,6 +2825,7 @@ env/lib/python3.6/site-packages/twisted/internet/__pycache__/tcp.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/internet/__pycache__/threads.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/internet/__pycache__/udp.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/internet/__pycache__/unix.cpython-36.pyc
+env/lib/python3.6/site-packages/twisted/internet/defer.py
 env/lib/python3.6/site-packages/twisted/logger
 env/lib/python3.6/site-packages/twisted/logger/__pycache__/__init__.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/logger/__pycache__/_buffer.cpython-36.pyc
@@ -2885,6 +2897,7 @@ env/lib/python3.6/site-packages/twisted/python/__pycache__/util.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/python/__pycache__/versions.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/python/__pycache__/win32.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/python/__pycache__/zippath.cpython-36.pyc
+env/lib/python3.6/site-packages/twisted/python/failure.py
 env/lib/python3.6/site-packages/twisted/spread
 env/lib/python3.6/site-packages/twisted/spread/__pycache__/__init__.cpython-36.pyc
 env/lib/python3.6/site-packages/twisted/spread/__pycache__/banana.cpython-36.pyc
@@ -2928,6 +2941,8 @@ env/lib/python3.6/site-packages/urllib3/__pycache__/filepost.cpython-36.pyc
 env/lib/python3.6/site-packages/urllib3/__pycache__/poolmanager.cpython-36.pyc
 env/lib/python3.6/site-packages/urllib3/__pycache__/request.cpython-36.pyc
 env/lib/python3.6/site-packages/urllib3/__pycache__/response.cpython-36.pyc
+env/lib/python3.6/site-packages/urllib3/connection.py
+env/lib/python3.6/site-packages/urllib3/connectionpool.py
 env/lib/python3.6/site-packages/urllib3/contrib
 env/lib/python3.6/site-packages/urllib3/contrib/__init__.py
 env/lib/python3.6/site-packages/urllib3/contrib/__pycache__/__init__.cpython-36.pyc
@@ -2953,6 +2968,8 @@ env/lib/python3.6/site-packages/urllib3/util/__pycache__/ssl_.cpython-36.pyc
 env/lib/python3.6/site-packages/urllib3/util/__pycache__/timeout.cpython-36.pyc
 env/lib/python3.6/site-packages/urllib3/util/__pycache__/url.cpython-36.pyc
 env/lib/python3.6/site-packages/urllib3/util/__pycache__/wait.cpython-36.pyc
+env/lib/python3.6/site-packages/urllib3/util/connection.py
+env/lib/python3.6/site-packages/urllib3/util/retry.py
 env/lib/python3.6/site-packages/webencodings
 env/lib/python3.6/site-packages/webencodings-0.5.1.dist-info
 env/lib/python3.6/site-packages/webencodings-0.5.1.dist-info/METADATA
@@ -3097,8 +3114,9 @@ opt
 proc/cpuinfo
 pylint.cfg
 pyproject.toml
-rpaidraven.sandcats.io.log.config
-rpaidraven.sandcats.io.signing.key
+rapidraven.sandcats.io.log.config
+rapidraven.sandcats.io.signing.key
+sandstorm-files.list
 sandstorm-http-bridge
 sandstorm-http-bridge-config
 sandstorm-manifest
@@ -3137,6 +3155,8 @@ setup.py
 snap/snapcraft.yaml
 synapse
 synapse/__init__.py
+synapse/__pycache__/__init__.cpython-36.pyc
+synapse/_scripts
 synapse/_scripts/__init__.py
 synapse/_scripts/register_new_matrix_user.py
 synapse/api
@@ -3170,6 +3190,8 @@ synapse/appservice/scheduler.py
 synapse/config
 synapse/config/__init__.py
 synapse/config/__main__.py
+synapse/config/__pycache__/__init__.cpython-36.pyc
+synapse/config/__pycache__/_base.cpython-36.pyc
 synapse/config/_base.py
 synapse/config/_base.pyi
 synapse/config/api.py
@@ -4059,6 +4081,7 @@ usr/lib/python3.6/__pycache__/fnmatch.cpython-36.pyc
 usr/lib/python3.6/__pycache__/functools.cpython-36.pyc
 usr/lib/python3.6/__pycache__/genericpath.cpython-36.pyc
 usr/lib/python3.6/__pycache__/getopt.cpython-36.pyc
+usr/lib/python3.6/__pycache__/getpass.cpython-36.pyc
 usr/lib/python3.6/__pycache__/gettext.cpython-36.pyc
 usr/lib/python3.6/__pycache__/glob.cpython-36.pyc
 usr/lib/python3.6/__pycache__/gzip.cpython-36.pyc
@@ -4073,6 +4096,7 @@ usr/lib/python3.6/__pycache__/linecache.cpython-36.pyc
 usr/lib/python3.6/__pycache__/locale.cpython-36.pyc
 usr/lib/python3.6/__pycache__/lzma.cpython-36.pyc
 usr/lib/python3.6/__pycache__/mimetypes.cpython-36.pyc
+usr/lib/python3.6/__pycache__/netrc.cpython-36.pyc
 usr/lib/python3.6/__pycache__/numbers.cpython-36.pyc
 usr/lib/python3.6/__pycache__/opcode.cpython-36.pyc
 usr/lib/python3.6/__pycache__/operator.cpython-36.pyc
@@ -4094,6 +4118,7 @@ usr/lib/python3.6/__pycache__/reprlib.cpython-36.pyc
 usr/lib/python3.6/__pycache__/runpy.cpython-36.pyc
 usr/lib/python3.6/__pycache__/secrets.cpython-36.pyc
 usr/lib/python3.6/__pycache__/selectors.cpython-36.pyc
+usr/lib/python3.6/__pycache__/shlex.cpython-36.pyc
 usr/lib/python3.6/__pycache__/shutil.cpython-36.pyc
 usr/lib/python3.6/__pycache__/signal.cpython-36.pyc
 usr/lib/python3.6/__pycache__/site.cpython-36.pyc
@@ -4219,6 +4244,7 @@ usr/lib/python3.6/http/__pycache__/client.cpython-36.pyc
 usr/lib/python3.6/http/__pycache__/cookiejar.cpython-36.pyc
 usr/lib/python3.6/http/__pycache__/cookies.cpython-36.pyc
 usr/lib/python3.6/http/__pycache__/server.cpython-36.pyc
+usr/lib/python3.6/http/client.py
 usr/lib/python3.6/importlib
 usr/lib/python3.6/importlib/__pycache__/__init__.cpython-36.pyc
 usr/lib/python3.6/importlib/__pycache__/abc.cpython-36.pyc
@@ -4260,6 +4286,7 @@ usr/lib/python3.6/multiprocessing/__pycache__/util.cpython-36.pyc
 usr/lib/python3.6/os.py
 usr/lib/python3.6/runpy.py
 usr/lib/python3.6/sitecustomize.py
+usr/lib/python3.6/socket.py
 usr/lib/python3.6/sqlite3
 usr/lib/python3.6/sqlite3/__pycache__/__init__.cpython-36.pyc
 usr/lib/python3.6/sqlite3/__pycache__/dbapi2.cpython-36.pyc

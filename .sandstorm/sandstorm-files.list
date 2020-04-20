@@ -10,12 +10,9 @@ etc/ld.so.cache
 etc/localtime
 etc/mime.types
 etc/ssl/certs/ca-certificates.crt
-lib/x86_64-linux-gnu/ld-2.27.so
 lib/x86_64-linux-gnu/libbz2.so.1.0
 lib/x86_64-linux-gnu/libbz2.so.1.0.4
-lib/x86_64-linux-gnu/libc-2.27.so
 lib/x86_64-linux-gnu/libc.so.6
-lib/x86_64-linux-gnu/libdl-2.27.so
 lib/x86_64-linux-gnu/libdl.so.2
 lib/x86_64-linux-gnu/libexpat.so.1
 lib/x86_64-linux-gnu/libgcc_s.so.1
@@ -24,14 +21,10 @@ lib/x86_64-linux-gnu/liblzma.so.5.2.2
 lib/x86_64-linux-gnu/libm.so.6
 lib/x86_64-linux-gnu/libncursesw.so.5
 lib/x86_64-linux-gnu/libncursesw.so.5.9
-lib/x86_64-linux-gnu/libnsl-2.27.so
 lib/x86_64-linux-gnu/libnsl.so.1
-lib/x86_64-linux-gnu/libnss_compat-2.27.so
 lib/x86_64-linux-gnu/libnss_compat.so.2
 lib/x86_64-linux-gnu/libnss_dns.so.2
-lib/x86_64-linux-gnu/libnss_files-2.27.so
 lib/x86_64-linux-gnu/libnss_files.so.2
-lib/x86_64-linux-gnu/libnss_nis-2.27.so
 lib/x86_64-linux-gnu/libnss_nis.so.2
 lib/x86_64-linux-gnu/libpthread.so.0
 lib/x86_64-linux-gnu/libresolv.so.2

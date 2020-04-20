@@ -10,10 +10,10 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y build-essential python3-dev libffi-dev \
   python3-pip python3-setuptools sqlite3 \
-  libssl-dev python3-virtualenv libjpeg-dev libxslt1-dev \
-  libpq-dev python3-virtualenv
+  libssl-dev python3-venv libjpeg-dev libxslt1-dev \
+  libpq-dev
 
-virtualenv -p python3 env
+python3 -m venv env
 source env/bin/activate
 python3 -m pip install --no-use-pep517 -e .[all]
 

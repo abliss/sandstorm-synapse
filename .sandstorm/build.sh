@@ -9,8 +9,12 @@ set -xeuo pipefail
 python3 -m virtualenv -p python3 env
 # python devs don't understand bash
 export PS1=''
-
 source env/bin/activate
-python -m pip install --no-use-pep517 -e .[all]
+
+if [ ! -e setup.py ] ; then
+    cd /opt/app
+fi
+
+python3 -m pip install --no-use-pep517 -e .[all]
 
 exit 0

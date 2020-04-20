@@ -28,13 +28,34 @@ const pkgdef :Spk.PackageDefinition = (
     actions = [
       # Define your "new document" handlers here.
       ( nounPhrase = (defaultText = "instance"),
-        command = .myCommand
-        # The command to run when starting for the first time. (".myCommand"
-        # is just a constant defined at the bottom of the file.)
-      )
+        command = (
+           # Here we define the command used to start up your server.
+           argv = ["/sandstorm-http-bridge", "8008", "--", "/bin/bash", ".sandstorm/launcher.sh"],
+           environ = [
+             # Note that this defines the *entire* environment seen by your app.
+             (key = "PATH", value = "/usr/local/bin:/usr/bin:/bin"),
+             (key = "FIRST_RUN", value = "1"),
+             (key = "SANDSTORM", value = "1"),
+             # Export SANDSTORM=1 into the environment, so that apps running within Sandstorm
+             # can detect if $SANDSTORM="1" at runtime, switching UI and/or backend to use
+             # the app's Sandstorm-specific integration code.
+           ]
+         ),
+       ),
     ],
 
-    continueCommand = .myCommand,
+    continueCommand = (
+      # Here we define the command used to start up your server.
+      argv = ["/sandstorm-http-bridge", "8008", "--", "/bin/bash", ".sandstorm/launcher.sh"],
+      environ = [
+        # Note that this defines the *entire* environment seen by your app.
+        (key = "PATH", value = "/usr/local/bin:/usr/bin:/bin"),
+        (key = "SANDSTORM", value = "1"),
+        # Export SANDSTORM=1 into the environment, so that apps running within Sandstorm
+        # can detect if $SANDSTORM="1" at runtime, switching UI and/or backend to use
+        # the app's Sandstorm-specific integration code.
+      ]
+    ),
     # This is the command called to start your app back up after it has been
     # shut down for inactivity. Here we're using the same command as for
     # starting a new instance, but you could use different commands for each
@@ -233,15 +254,4 @@ const pkgdef :Spk.PackageDefinition = (
   ),
 );
 
-const myCommand :Spk.Manifest.Command = (
-  # Here we define the command used to start up your server.
-  argv = ["/sandstorm-http-bridge", "8008", "--", "/bin/bash", ".sandstorm/launcher.sh"],
-  environ = [
-    # Note that this defines the *entire* environment seen by your app.
-    (key = "PATH", value = "/usr/local/bin:/usr/bin:/bin"),
-    (key = "SANDSTORM", value = "1"),
-    # Export SANDSTORM=1 into the environment, so that apps running within Sandstorm
-    # can detect if $SANDSTORM="1" at runtime, switching UI and/or backend to use
-    # the app's Sandstorm-specific integration code.
-  ]
-);
+

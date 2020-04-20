@@ -33,14 +33,6 @@ set -xeuo pipefail
 export PS1=''
 source env/bin/activate
 
-ls -la env/bin
-ls -la /home/abliss/
-ls -la /home/abliss/proj
-ls -la /home/abliss/proj/sandstorm
-ls -la /home/abliss/proj/sandstorm/matrix
-ls -la /home/abliss/proj/sandstorm/matrix/env
-ls -la /home/abliss/proj/sandstorm/matrix/env/bin
-
 # Without a HOME, I get:
 #   File "/usr/lib/python3.5/sysconfig.py", line 546, in get_config_vars
 #     _CONFIG_VARS['userbase'] = _getuserbase()
@@ -52,4 +44,20 @@ ls -la /home/abliss/proj/sandstorm/matrix/env/bin
 #     userhome = pwd.getpwuid(os.getuid()).pw_dir
 # KeyError: 'getpwuid(): uid not found: 1653'
 export HOME=/var
-synctl start --no-daemonize
+
+if [[ "1" == "${FIRST_RUN:-0}" ]]; then
+    echo "Spinning up server in order to add an admin user..."
+    export HOME=/var
+    synctl start
+    echo "Adding an admin user..."
+    register_new_matrix_user \
+        --config homeserver.yaml \
+        --user "admin" \
+        --password "admin" \
+        --admin \
+        http://127.0.0.1:8008
+    echo "Tearing down server..."
+    synctl stop
+fi
+exec synctl start --no-daemonize
+
