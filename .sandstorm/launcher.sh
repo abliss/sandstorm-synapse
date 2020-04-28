@@ -29,22 +29,31 @@ set -xeuo pipefail
 # By default, this script does nothing.  You'll have to modify it as
 # appropriate for your application.
 
-# python devs don't know bash
-export PS1=''
-source env/bin/activate
 
-# Without a HOME, I get:
-#   File "/usr/lib/python3.5/sysconfig.py", line 546, in get_config_vars
-#     _CONFIG_VARS['userbase'] = _getuserbase()
-#   File "/usr/lib/python3.5/sysconfig.py", line 205, in _getuserbase
-#     return joinuser("~", ".local")
-#   File "/usr/lib/python3.5/sysconfig.py", line 184, in joinuser
-#     return os.path.expanduser(os.path.join(*args))
-#   File "/usr/lib/python3.5/posixpath.py", line 238, in expanduser
-#     userhome = pwd.getpwuid(os.getuid()).pw_dir
-# KeyError: 'getpwuid(): uid not found: 1653'
-export HOME=/var
+. activate.sh
+
 
 export TMPDIR=/var
+
+# without manually setting PYTHONPATH, I get:
+# Could not find platform independent libraries <prefix>
+# Consider setting $PYTHONHOME to <prefix>[:<exec_prefix>]
+# Fatal Python error: Py_Initialize: Unable to get the locale encoding
+# LookupError: no codec search functions registered: can't find encoding
+#export PYTHONHOME="${PWD}/env"
+
+if [ ! -e homeserver.yaml ] ; then
+    cd /opt/app
+fi
+if [ ! -e /var/example.com.signing.key ] ; then
+    echo "Generating new signing key"
+    pushd /var
+    python3 -m synapse.app.homeserver --server-name example.com \
+            --config-path deleteme.yaml \
+            --generate-config \
+            --report-stats=no
+    popd
+fi
+
 exec synctl start --no-daemonize
 

@@ -7,8 +7,8 @@ import json
 from synapse.util.async_helpers import Linearizer
 
 logger = logging.getLogger(__name__)
-from trepan.api import debug
-from trepan.interfaces import server as Mserver
+#from trepan.api import debug
+#from trepan.interfaces import server as Mserver
 #debug(dbg_opts={'interface':Mserver.ServerInterface(connection_opts={'IO':'FIFO'})})
 import signal
 def signal_handler(num, f):

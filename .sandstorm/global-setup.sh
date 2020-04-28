@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -xeuo pipefail
 
 # Set options for curl. Since we only want to show errors from these curl commands, we also use
 # 'cat' to buffer the output; for more information:
@@ -10,8 +10,12 @@ echo localhost > /etc/hostname
 hostname localhost
 
 # Install curl that is needed below.
-apt-get update
-apt-get install -y curl
+if which curl; then
+    echo "Assuming up to date."
+else
+    apt-get update
+    apt-get install -y curl
+fi
 
 # The following line copies stderr through stderr to cat without accidentally leaving it in the
 # output file. Be careful when changing. See: https://github.com/sandstorm-io/vagrant-spk/pull/159

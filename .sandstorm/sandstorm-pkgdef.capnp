@@ -9,7 +9,7 @@ const pkgdef :Spk.PackageDefinition = (
   # The package definition. Note that the spk tool looks specifically for the
   # "pkgdef" constant.
 
-  id = "5cq4zgtwcderwxwu36z6uzq32jzfqf1udng742efftssgk5u27y0",
+  id = "ds0jw4vg0xxu1n51yuwu0v1458959ysmkndjckr52fptr0cm6uq0",
   # Your app ID is actually its public key. The private key was placed in
   # your keyring. All updates must be signed with the same key.
 
@@ -114,7 +114,7 @@ const pkgdef :Spk.PackageDefinition = (
       # in an app store. Note that the Markdown is not permitted to contain HTML nor image tags (but
       # you can include a list of screenshots separately).
 
-      shortDescription = (defaultText = "one-to-three words"),
+      shortDescription = (defaultText = "Federated Chat Server"),
       # A very short (one-to-three words) description of what the app does. For example,
       # "Document editor", or "Notetaking", or "Email client". This will be displayed under the app
       # title in the grid view in the app market.
@@ -140,11 +140,11 @@ const pkgdef :Spk.PackageDefinition = (
     # automatically by running it on a FUSE filesystem. So, the mappings
     # here are only to tell it where to find files that the app wants.
     searchPath = [
-      ( sourcePath = ".." ),  # Search this directory first.
+      ( sourcePath = "." ),  # Search this directory first.
       ( sourcePath = "/",    # Then search the system root directory.
         hidePaths = [ "home", "proc", "sys",
                       "etc/passwd", "etc/hosts", "etc/host.conf",
-                      "etc/nsswitch.conf", "etc/resolv.conf" ]
+                      "etc/nsswitch.conf", "etc/resolv.conf", ".git" ]
         # You probably don't want the app pulling files from these places,
         # so we hide them. Note that /dev, /var, and /tmp are implicitly
         # hidden because Sandstorm itself provides them.
@@ -186,42 +186,53 @@ const pkgdef :Spk.PackageDefinition = (
       # permission, or for more information, see "PermissionDef" in
       # https://github.com/sandstorm-io/sandstorm/blob/master/src/sandstorm/grain.capnp
         (
-          name = "editor",
+          name = "admin",
           # Name of the permission, used as an identifier for the permission in cases where string
           # names are preferred.  Used in sandstorm-http-bridge's X-Sandstorm-Permissions HTTP header.
   
-          title = (defaultText = "editor"),
+          title = (defaultText = "admin"),
           # Display name of the permission, e.g. to display in a checklist of permissions
           # that may be assigned when sharing.
   
-          description = (defaultText = "grants ability to modify data"),
+          description = (defaultText = "Can login as admin user"),
           # Prose describing what this role means, suitable for a tool tip or similar help text.
+        ),
+        (
+          name = "login",
+          title = (defaultText = "login"),
+          description = (defaultText = "Can login"),
         ),
       ],
       roles = [
         # Roles are logical collections of permissions.  For instance, your app may have
         # a "viewer" role and an "editor" role
         (
-          title = (defaultText = "editor"),
+          title = (defaultText = "admin user"),
           # Name of the role.  Shown in the Sandstorm UI to indicate which users have which roles.
   
-          permissions  = [true],
+          permissions  = [true, true],
           # An array indicating which permissions this role carries.
           # It should be the same length as the permissions array in
           # viewInfo, and the order of the lists must match.
   
-          verbPhrase = (defaultText = "can make changes to the document"),
+          verbPhrase = (defaultText = "can login as admin"),
           # Brief explanatory text to show in the sharing UI indicating
           # what a user assigned this role will be able to do with the grain.
   
-          description = (defaultText = "editors may view all site data and change settings."),
+          description = (defaultText = "admin users can access the admin http apis (currently no GUI)"),
           # Prose describing what this role means, suitable for a tool tip or similar help text.
         ),
         (
-          title = (defaultText = "viewer"),
-          permissions  = [false],
-          verbPhrase = (defaultText = "can view the document"),
-          description = (defaultText = "viewers may view what other users have written."),
+          title = (defaultText = "user"),
+          permissions  = [false, true],
+          verbPhrase = (defaultText = "Can login and chat"),
+          description = (defaultText = "users can login as sandstorm users and chat."),
+        ),
+        (
+          title = (defaultText = "guest"),
+          permissions  = [false, false],
+          verbPhrase = (defaultText = "can access public apis only"),
+          description = (defaultText = "guests cannot login but may be able to send messages to users."),
         ),
       ],
     ),
@@ -235,7 +246,7 @@ const pkgdef :Spk.PackageDefinition = (
 
 const myCommand :Spk.Manifest.Command = (
   # Here we define the command used to start up your server.
-  argv = ["/sandstorm-http-bridge", "8008", "--", "/bin/bash", ".sandstorm/launcher.sh"],
+  argv = ["/sandstorm-http-bridge", "8008", "--", "/bin/bash", "launcher.sh"],
   environ = [
     # Note that this defines the *entire* environment seen by your app.
     (key = "PATH", value = "/usr/local/bin:/usr/bin:/bin"),

@@ -6,14 +6,20 @@
 set -xeuo pipefail
 # This is the ideal place to do things like:
 #
-export DEBIAN_FRONTEND=noninteractive
-apt-get update
-apt-get install -y build-essential python3-dev libffi-dev \
-  python3-pip python3-setuptools sqlite3 \
-  libssl-dev python3-venv libjpeg-dev libxslt1-dev \
-  libpq-dev
+if which sqlite3 ; then
+    echo "Assuming already installed."
+else
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y build-essential python3-dev libffi-dev \
+            python3-pip python3-setuptools sqlite3 \
+            libssl-dev python3-venv libjpeg-dev libxslt1-dev \
+            libpq-dev
+fi
+OLD_PWD=$(pwd)
+cd /opt/app/.sandstorm
+PIP_ARGS=()
+. activate.sh
+python3 -m pip install "${PIP_ARGS[@]}" -e .[all]
 
-python3 -m venv env
-source env/bin/activate
-python3 -m pip install --no-use-pep517 -e .[all]
 
