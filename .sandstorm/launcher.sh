@@ -45,19 +45,6 @@ source env/bin/activate
 # KeyError: 'getpwuid(): uid not found: 1653'
 export HOME=/var
 
-if [[ "1" == "${FIRST_RUN:-0}" ]]; then
-    echo "Spinning up server in order to add an admin user..."
-    export HOME=/var
-    synctl start
-    echo "Adding an admin user..."
-    register_new_matrix_user \
-        --config homeserver.yaml \
-        --user "admin" \
-        --password "admin" \
-        --admin \
-        http://127.0.0.1:8008
-    echo "Tearing down server..."
-    synctl stop
-fi
+export TMPDIR=/var
 exec synctl start --no-daemonize
 

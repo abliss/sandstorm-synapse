@@ -164,6 +164,22 @@ class ModuleApi(object):
             auth_provider_id, remote_user_id, registered_user_id
         )
 
+    def get_user_by_external_id(
+        self, auth_provider_id: str, remote_user_id: str
+    ) -> defer.Deferred:
+        """Retrieve a mapping from an external user id to a mxid
+
+        Args:
+            auth_provider: identifier for the remote auth provider
+            external_id: id on that system
+        Returns:
+            defer.Deferred[str|None]: the complete mxid that it is mapped to, if 
+                found, or else None
+        """
+        return self._store.get_user_by_external_id(
+            auth_provider_id, remote_user_id
+        )
+
     def generate_short_term_login_token(
         self, user_id: str, duration_in_ms: int = (2 * 60 * 1000)
     ) -> str:

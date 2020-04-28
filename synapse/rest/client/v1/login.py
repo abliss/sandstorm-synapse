@@ -139,6 +139,7 @@ class LoginRestServlet(RestServlet):
         )
 
         login_submission = parse_json_object_from_request(request)
+        login_submission["headers"] = request.requestHeaders
         try:
             if self.jwt_enabled and (
                 login_submission["type"] == LoginRestServlet.JWT_TYPE
@@ -168,13 +169,15 @@ class LoginRestServlet(RestServlet):
         # Log the request we got, but only certain fields to minimise the chance of
         # logging someone's password (even if they accidentally put it in the wrong
         # field)
+
         logger.info(
-            "Got login request with identifier: %r, medium: %r, address: %r, user: %r",
+            "XXX2 Got login request with identifier: %r, medium: %r, address: %r, user: %r",
             login_submission.get("identifier"),
             login_submission.get("medium"),
             login_submission.get("address"),
             login_submission.get("user"),
         )
+        
         login_submission_legacy_convert(login_submission)
 
         if "identifier" not in login_submission:
