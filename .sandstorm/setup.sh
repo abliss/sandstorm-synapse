@@ -23,3 +23,10 @@ PIP_ARGS=()
 python3 -m pip install "${PIP_ARGS[@]}" -e .[all]
 
 
+# Python will only stat() os.py, and if it's old, will only open() os.pyc. This
+# confuses spk-dev and causes os.py to not show up in sandstorm-files.list, so
+# the packed .spk will fail with this cryptic message:
+#   Could not find platform independent libraries <prefix>
+# To avoid this, we freshen every single python file before starting spk-dev.
+
+time find /usr/lib/python* /usr/local/lib/python* -name '*.py' -exec touch '{}' ';'
