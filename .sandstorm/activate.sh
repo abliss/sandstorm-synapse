@@ -11,12 +11,15 @@
 #     userhome = pwd.getpwuid(os.getuid()).pw_dir
 # KeyError: 'getpwuid(): uid not found: 1653'
 export HOME="${HOME-/var}"
-
+pwd
+ls
 ENV_NAME="env"
 PIP_ARGS=("--no-use-pep517")
+APP_DIR="/"
 if [ ! -d "${ENV_NAME}" ]; then
-    cd /opt/app
+    APP_DIR="/opt/app"
     ENV_NAME="env_optapp"
+    cd "$APP_DIR"
     PIP_ARGS=()
 fi
 if [ ! -d "${ENV_NAME}" ]; then

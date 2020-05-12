@@ -41,18 +41,17 @@ export TMPDIR=/var
 # Fatal Python error: Py_Initialize: Unable to get the locale encoding
 # LookupError: no codec search functions registered: can't find encoding
 #export PYTHONHOME="${PWD}/env"
+pushd /var
 
-if [ ! -e homeserver.yaml ] ; then
-    cd /opt/app
-fi
-if [ ! -e /var/example.com.signing.key ] ; then
+if [ ! -e example.com.signing.key ] ; then
     echo "Generating new signing key"
-    pushd /var
     python3 -m synapse.app.homeserver --server-name example.com \
             --config-path deleteme.yaml \
             --generate-config \
             --report-stats=no
-    popd
+    rm deleteme.yaml
+    cp "${APP_DIR}/homeserver.yaml" .
+    cp "${APP_DIR}/example.com.log.conf" .
 fi
 
 exec synctl start --no-daemonize

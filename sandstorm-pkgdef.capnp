@@ -1,0 +1,1 @@
+.sandstorm/sandstorm-pkgdef.capnp
