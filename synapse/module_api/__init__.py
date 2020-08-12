@@ -180,6 +180,18 @@ class ModuleApi(object):
             auth_provider_id, remote_user_id
         )
 
+    def set_server_admin(
+            self, user_id, admin
+    ) -> defer.Deferred:
+        """Sets whether a user is an admin of this homeserver.
+
+        Args:
+            user (UserID): user ID of the user to test
+            admin (bool): true iff the user is to be a server admin,
+                false otherwise.
+        """
+        return self._store.set_server_admin(user_id, admin)
+
     def generate_short_term_login_token(
         self, user_id: str, duration_in_ms: int = (2 * 60 * 1000)
     ) -> str:

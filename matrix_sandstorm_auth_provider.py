@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 import signal
 def signal_handler(num, f):
   logger.info("Caught sig handler.")
-  from trepan.api import debug;
+  #from trepan.api import debug;
+  #from trepan.interfaces import server as Mserver
   debug(dbg_opts={'interface':Mserver.ServerInterface(connection_opts={'IO':'FIFO'})})
   return
 signal.signal(signal.SIGUSR1, signal_handler)
@@ -62,41 +63,46 @@ class Provider(object):
         headers = login_dict["headers"]
         display_name = getHeader(headers,"X-Sandstorm-Username", "UnknownName")
         external_id = getHeader(headers,"X-Sandstorm-User-Id", "GuestId")
-        perms = getHeader(headers,"X-Sandstorm-Permissions", "")
-        handle = getHeader(headers,"X-Sandstorm-Preferred-Handle", "UnknownHandle")
-        pic = getHeader(headers,"X-Sandstorm-User-Picture", "")
-        pronouns = getHeader(headers,"X-Sandstorm-User-Pronouns", "")
-        with (yield self._mapping_lock.queue(self._auth_provider_id)):
-            try: 
-                registered_user_id = yield self._account_handler.get_user_by_external_id(
-                    self._auth_provider_id, external_id)
-                # XXX WTF
-                registered_user_id = yield defer.ensureDeferred(registered_user_id)
-            except e:
-                log.warning("Could not get external id: ", e)
-            if registered_user_id is not None:
-                logger.info("Found existing mapping %s!!", registered_user_id)
-                defer.returnValue(registered_user_id)
-               
-            else:
-                logger.info("User %s does not exist yet, creating...", handle)
-                for suffix in [""] + ["_" + str(x) for x in range(1000)]:
-                    localpart = handle + suffix
-                    mxid = self._account_handler.get_qualified_user_id(localpart)
-                    exists = yield self._account_handler.check_user_exists(mxid)
-                    if exists:
-                        logger.info("Handle conflicts with %s, trying again", exists)
-                    else:
-                        logger.info("Registering user %s as %s", external_id, mxid)
-                        registered, access_token = (yield self._account_handler.register(
-                          localpart=localpart, displayname=display_name
-                        ))
-                        logger.info("Registration was successful as %s; recording mapping", registered) 
-                        result = yield self._account_handler.record_user_external_id(
-                            self._auth_provider_id, external_id, registered
-                        )
-                        logger.info("Mapping successful: %s", result) 
-                        defer.returnValue(registered)
-        logger.warning("Could not register user %s!", external_id)
-        defer.returnValue(None)
+        perms = getHeader(headers,"X-Sandstorm-Permissions", "").split(",")
+        if "login" not in perms:
+          log.warning("No login perm, denying login");
+          defer.returnValue(None)
+        else:
+          handle = getHeader(headers,"X-Sandstorm-Preferred-Handle", "UnknownHandle")
+          pic = getHeader(headers,"X-Sandstorm-User-Picture", "")
+          pronouns = getHeader(headers,"X-Sandstorm-User-Pronouns", "")
+          with (yield self._mapping_lock.queue(self._auth_provider_id)):
+              registered_user_id = ""
+              try: 
+                  registered_user_id = yield self._account_handler.get_user_by_external_id(
+                      self._auth_provider_id, external_id)
+                  # XXX WTF
+                  registered_user_id = yield defer.ensureDeferred(registered_user_id)
+              except e:
+                  logger.warning("Could not get external id: ", e)
+              if registered_user_id is not None:
+                  logger.info("Found existing mapping %s!!", registered_user_id)
+              else:
+                  logger.info("User %s does not exist yet, creating...", handle)
+                  for suffix in [""] + ["_" + str(x) for x in range(1000)]:
+                      localpart = handle + suffix
+                      mxid = self._account_handler.get_qualified_user_id(localpart)
+                      exists = yield self._account_handler.check_user_exists(mxid)
+                      if exists:
+                          logger.info("Handle conflicts with %s, trying again", exists)
+                      else:
+                          logger.info("Registering user %s as %s", external_id, mxid)
+                          registered_user_id, access_token = (yield self._account_handler.register(
+                            localpart=localpart, displayname=display_name
+                          ))
+                          logger.info("Registration was successful as %s; recording mapping", registered_user_id) 
+                          result = yield self._account_handler.record_user_external_id(
+                              self._auth_provider_id, external_id, registered_user_id
+                          )
+                          logger.info("Mapping successful: %s", result)
+              yield self._account_handler.set_server_admin(
+                registered_user_id, "admin" in perms)
+              defer.returnValue(registered_user_id)
+          logger.warning("Could not register user %s!", external_id)
+          defer.returnValue(None)
 
